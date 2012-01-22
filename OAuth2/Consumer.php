@@ -19,6 +19,8 @@ class Consumer {
 		if(isset($urlparams['response_type']))
 		$authparams['response_type'] = $urlparams['response_type'];
 
+		$authparams['display'] = 'popup';
+		
 		$out = $urlparams['auth_url'] . '?' . http_build_query($authparams);
 		return $out;
 	}

@@ -17,7 +17,11 @@ class Facebook
     public function getId()
     {
         $endpoint = 'https://graph.facebook.com/me?fields=id';
-        return json_decode($this->_getData('id', $endpoint))->id;
+        $id = json_decode($this->_getData('id', $endpoint));
+        if(isset($id->error)) {
+            return NULL;
+        }
+        return $id->id;
     }
 
     public function getProfile()

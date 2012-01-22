@@ -49,8 +49,7 @@ class MultipleIdentities implements \Zend_Auth_Storage_Interface
 
     public function clear($provider = null)
     {
-        if (null !== $provider) {
-            $container = $this->read();
+        if (null !== $provider && false != $container = $this->read()) {
             $container->remove($provider);
             $this->write($container);
         } else {

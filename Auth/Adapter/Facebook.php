@@ -12,7 +12,7 @@ class Facebook implements \Zend_Auth_Adapter_Interface
     protected $_requestToken;
     protected $_options;
 
-    public function __construct($requestToken)
+    public function __construct($requestToken = NULL)
     {
         $this->_setOptions();
         $this->_setRequestToken($requestToken);
@@ -24,10 +24,10 @@ class Facebook implements \Zend_Auth_Adapter_Interface
         $result['code'] = Result::FAILURE;
         $result['identity'] = NULL;
         $result['messages'] = array();
-
-        if (!array_key_exists('error', $this->_accessToken)) {
+        $identity = new Identity($this->_accessToken);
+        if (NULL !== $identity->getId()) {
             $result['code'] = Result::SUCCESS;
-            $result['identity'] = new Identity($this->_accessToken);
+            $result['identity'] = $identity;
         }
 
         return new Result($result['code'], $result['identity'],
@@ -42,12 +42,19 @@ class Facebook implements \Zend_Auth_Adapter_Interface
 
     protected function _setRequestToken($requestToken)
     {
+        if(NULL === $requestToken) return;
         $this->_options['code'] = $requestToken;
 
         $accesstoken = Consumer::getAccessToken($this->_options);
 
         $accesstoken['timestamp'] = time();
         $this->_accessToken = $accesstoken;
+    }
+    
+    public function setAccessToken($token) {
+        $accesstoken['timestamp'] = time();
+        $accesstoken['access_token'] = $token;
+        $this->_accessToken = $token;
     }
 
     protected function _setOptions($options = null)

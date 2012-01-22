@@ -57,15 +57,20 @@ class Auth
    public function authenticate(\Zend_Auth_Adapter_Interface $adapter)
    {
       $result = $adapter->authenticate();
- 
-      if(get_class($result->getIdentity()) !== 'TBS\Auth\Identity\Generic' &&
-         !is_subclass_of($result->getIdentity(), 'TBS\Auth\Identity\Generic')) {
+      $identity = $result->getIdentity();
+      if(NULL === $identity) {
+          return $result;
+      }
+      if(get_class($identity) !== 'TBS\Auth\Identity\Generic' &&
+         !is_subclass_of($identity, 'TBS\Auth\Identity\Generic')) {
          throw new \Exception('Not a valid identity');
       }
  
       $currentIdentity = $this->getIdentity();
  
-      if(get_class($currentIdentity) !== 'TBS\Auth\Identity\Container') {
+      if(false === $currentIdentity 
+          || get_class($currentIdentity) !== 'TBS\Auth\Identity\Container') 
+      {
          $currentIdentity = new Auth\Identity\Container();
       }
       $currentIdentity->add($result->getIdentity());
