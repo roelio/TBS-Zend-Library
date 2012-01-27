@@ -1,6 +1,4 @@
 <?php
-namespace TBS; 
-
 /**
  * 
  * This class is almost an identical copy of the Zend_Auth class.
@@ -9,7 +7,7 @@ namespace TBS;
  * @author Roel Obdam
  *
  */
-class Auth
+class TBS_Auth
 {
    protected static $_instance = null;
    protected $_storage = null;
@@ -29,7 +27,7 @@ class Auth
    protected function __clone()
    {}
  
-   public function setStorage(\Zend_Auth_Storage_Interface $storage)
+   public function setStorage(Zend_Auth_Storage_Interface $storage)
    {
       $this->_storage = $storage;
       return $this;
@@ -39,7 +37,7 @@ class Auth
    public function getStorage()
    {
       if (NULL === $this->_storage) {
-         $this->setStorage(new Auth\Storage\MultipleIdentities());
+         $this->setStorage(new TBS_Auth_Storage_MultipleIdentities());
       }
  
       return $this->_storage;
@@ -51,27 +49,27 @@ class Auth
     * identity to the storage. This function only works with adapters that 
     * create a Generic identity.
     * 
-    * @param \Zend_Auth_Adapter_Interface $adapter
+    * @param Zend_Auth_Adapter_Interface $adapter
     * @throws Exception
     */
-   public function authenticate(\Zend_Auth_Adapter_Interface $adapter)
+   public function authenticate(Zend_Auth_Adapter_Interface $adapter)
    {
       $result = $adapter->authenticate();
       $identity = $result->getIdentity();
       if(NULL === $identity) {
           return $result;
       }
-      if(get_class($identity) !== 'TBS\Auth\Identity\Generic' &&
-         !is_subclass_of($identity, 'TBS\Auth\Identity\Generic')) {
-         throw new \Exception('Not a valid identity');
+      if(get_class($identity) !== 'TBS_Auth_Identity_Generic' &&
+         !is_subclass_of($identity, 'TBS_Auth_Identity_Generic')) {
+         throw new Exception('Not a valid identity');
       }
  
       $currentIdentity = $this->getIdentity();
  
       if(false === $currentIdentity 
-          || get_class($currentIdentity) !== 'TBS\Auth\Identity\Container') 
+          || get_class($currentIdentity) !== 'TBS_Auth_Identity_Container') 
       {
-         $currentIdentity = new Auth\Identity\Container();
+         $currentIdentity = new TBS_Auth_Identity_Container();
       }
       $currentIdentity->add($result->getIdentity());
  

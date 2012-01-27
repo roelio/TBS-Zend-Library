@@ -1,13 +1,5 @@
 <?php
-namespace TBS\Auth\Adapter;
-use \TBS\Auth\Identity\Twitter as Identity;
-
-use \Zend_Oauth_Consumer as Consumer;
-use \Zend_Auth_Result as Result;
-use \Zend_Session_Namespace as SessionNameSpace;
-use \Zend_Registry as Registry;
-
-class Twitter implements \Zend_Auth_Adapter_Interface
+class TBS_Auth_Adapter_Twitter implements \Zend_Auth_Adapter_Interface
 {
     protected $_accessToken;
     protected $_requestToken;
@@ -18,46 +10,46 @@ class Twitter implements \Zend_Auth_Adapter_Interface
     public function __construct($params)
     {
         $this->_setOptions();
-        $this->_consumer = new Consumer($this->_options);
+        $this->_consumer = new Zend_Oauth_Consumer($this->_options);
         $this->_setRequestToken($params);
     }
 
     public function authenticate()
     {
         $result = array();
-        $result['code'] = Result::FAILURE;
+        $result['code'] = Zend_Auth_Result::FAILURE;
         $result['identity'] = NULL;
         $result['messages'] = array();
 
         $data = array('tokens' => array('access_token' => $this->_accessToken));
 
-        $identity = new Identity($this->_accessToken, $this->_options);
-        $result['code'] = Result::SUCCESS;
+        $identity = new TBS_Auth_Identity_Twitter($this->_accessToken, $this->_options);
+        $result['code'] = Zend_Auth_Result::SUCCESS;
         $result['identity'] = $identity;
 
-        return new Result($result['code'], $result['identity'],
+        return new Zend_Auth_Result($result['code'], $result['identity'],
                           $result['messages']);
     }
 
     public static function getAuthorizationUrl()
     {
-        $options = Registry::get('config');
-        $consumer = new Consumer($options['twitter']);
+        $options = Zend_Registry::get('config');
+        $consumer = new Zend_Oauth_Consumer($options['twitter']);
         $token = $consumer->getRequestToken();
-        $twitterToken = new SessionNamespace('twitterToken');
+        $twitterToken = new Zend_Session_Namespace('twitterToken');
         $twitterToken->rt = serialize($token);
         return $consumer->getRedirectUrl(null, $token);
     }
 
     protected function _setOptions($options = null)
     {
-        $options = Registry::get('config');
+        $options = Zend_Registry::get('config');
         $this->_options = $options['twitter'];
     }
 
     protected function _setRequestToken($params)
     {
-        $twitterToken = new SessionNameSpace('twitterToken');
+        $twitterToken = new Zend_Session_Namespace('twitterToken');
         $token = unserialize($twitterToken->rt);
         $accesstoken = $this->_consumer->getAccessToken($params, $token);
         unset($twitterToken->rt);

@@ -1,9 +1,5 @@
 <?php
-namespace TBS\Resource;
-
-use \TBS\OAuth2\Consumer as Consumer;
-
-class Google
+class TBS_Resource_Google
 {
     protected $_accessToken;
 
@@ -29,7 +25,7 @@ class Google
     protected function _getData($label, $url, $redirects = true)
     {
         if (!$this->_hasData($label)) {
-            $value = Consumer::getData($url,
+            $value = TBS_OAuth2_Consumer::getData($url,
                                        $this->_accessToken['access_token'],
                                        $redirects);
             $this->_setData($label, $value);

@@ -1,7 +1,5 @@
 <?php
-namespace TBS\Auth\Identity;
-
-class Generic
+class TBS_Auth_Identity_Generic
 {
 	protected $_id;
 	protected $_name;

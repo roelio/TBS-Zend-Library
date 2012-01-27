@@ -1,8 +1,5 @@
 <?php
-namespace TBS\Auth\Storage;
-use \Zend_Session_Namespace as SessionNameSpace;
-
-class MultipleIdentities implements \Zend_Auth_Storage_Interface
+class TBS_Auth_Storage_MultipleIdentities implements Zend_Auth_Storage_Interface
 {
     const SESSION_NAMESPACE = "MultipleIdentities";
 
@@ -10,7 +7,7 @@ class MultipleIdentities implements \Zend_Auth_Storage_Interface
 
     public function __construct()
     {
-        $this->_session = new SessionNameSpace(self::SESSION_NAMESPACE);
+        $this->_session = new Zend_Session_Namespace(self::SESSION_NAMESPACE);
     }
 
     public function isEmpty($provider = null)
@@ -41,7 +38,7 @@ class MultipleIdentities implements \Zend_Auth_Storage_Interface
 
     public function write($container)
     {
-        if (get_class($container) !== 'TBS\Auth\Identity\Container') {
+        if (get_class($container) !== 'TBS_Auth_Identity_Container') {
             throw new Exception('No valid identity container');
         }
         $this->_session->identityContainer = serialize($container);

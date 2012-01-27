@@ -1,7 +1,5 @@
 <?php
-namespace TBS\Auth\Identity;
-
-class Container implements \Iterator
+class TBS_Auth_Identity_Container implements Iterator
 {
 	protected $_identities = array();
 	protected $_exists = true;
@@ -20,7 +18,7 @@ class Container implements \Iterator
 		return false;
 	}
 
-	public function add(Generic $identity)
+	public function add(TBS_Auth_Identity_Generic $identity)
 	{
 		$this->_identities[$identity->getName()] = $identity;
 	}

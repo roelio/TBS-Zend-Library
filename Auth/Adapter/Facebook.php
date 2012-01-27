@@ -1,12 +1,5 @@
 <?php
-namespace TBS\Auth\Adapter;
-use \TBS\Auth\Identity\Facebook as Identity;
-use \TBS\OAuth2\Consumer;
-
-use \Zend_Auth_Result as Result;
-use \Zend_Registry as Registry;
-
-class Facebook implements \Zend_Auth_Adapter_Interface
+class TBS_Auth_Adapter_Facebook implements Zend_Auth_Adapter_Interface
 {
     protected $_accessToken;
     protected $_requestToken;
@@ -21,23 +14,23 @@ class Facebook implements \Zend_Auth_Adapter_Interface
     public function authenticate()
     {
         $result = array();
-        $result['code'] = Result::FAILURE;
+        $result['code'] = Zend_Auth_Result::FAILURE;
         $result['identity'] = NULL;
         $result['messages'] = array();
-        $identity = new Identity($this->_accessToken);
+        $identity = new TBS_Auth_Identity_Facebook($this->_accessToken);
         if (NULL !== $identity->getId()) {
-            $result['code'] = Result::SUCCESS;
+            $result['code'] = Zend_Auth_Result::SUCCESS;
             $result['identity'] = $identity;
         }
 
-        return new Result($result['code'], $result['identity'],
+        return new Zend_Auth_Result($result['code'], $result['identity'],
                           $result['messages']);
     }
 
     public static function getAuthorizationUrl()
     {
-        $options = Registry::get('config');
-        return Consumer::getAuthorizationUrl($options['facebook']);
+        $options = Zend_Registry::get('config');
+        return TBS_OAuth2_Consumer::getAuthorizationUrl($options['facebook']);
     }
 
     protected function _setRequestToken($requestToken)
@@ -45,7 +38,7 @@ class Facebook implements \Zend_Auth_Adapter_Interface
         if(NULL === $requestToken) return;
         $this->_options['code'] = $requestToken;
 
-        $accesstoken = Consumer::getAccessToken($this->_options);
+        $accesstoken = TBS_OAuth2_Consumer::getAccessToken($this->_options);
 
         $accesstoken['timestamp'] = time();
         $this->_accessToken = $accesstoken;
@@ -59,7 +52,7 @@ class Facebook implements \Zend_Auth_Adapter_Interface
 
     protected function _setOptions($options = null)
     {
-        $options = Registry::get('config');
+        $options = Zend_Registry::get('config');
         $this->_options = $options['facebook'];
     }
 }

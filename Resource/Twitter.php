@@ -1,7 +1,5 @@
 <?php
-
-namespace TBS\Resource;
-class Twitter
+class TBS_Resource_Twitter
 {
 	protected $_accessToken;
 	protected $_options;

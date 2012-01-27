@@ -1,13 +1,11 @@
 <?php
-namespace TBS\OAuth2;
-
-class Consumer {
+class TBS_OAuth2_Consumer {
 
 	public static function getAuthorizationUrl($urlparams)
 	{
 		$authparams = array();
 		if(!isset($urlparams['auth_url']))
-		throw new \Exception('No auth url specified');
+		throw new Exception('No auth url specified');
 		if(isset($urlparams['client_id']))
 		$authparams['client_id'] = $urlparams['client_id'];
 		if(isset($urlparams['state']))
@@ -29,7 +27,7 @@ class Consumer {
 	{
 		$authparams = array();
 		if(!isset($urlparams['token_url']))
-		throw new \Exception('No token url specified');
+		throw new Exception('No token url specified');
 		if(isset($urlparams['client_id']))
 		$authparams['client_id'] = $urlparams['client_id'];
 		if(isset($urlparams['client_secret']))
@@ -43,7 +41,7 @@ class Consumer {
 		if(isset($urlparams['grant_type']))
 		$authparams['grant_type'] = $urlparams['grant_type'];
 
-		$client = new \Zend_Http_Client();
+		$client = new Zend_Http_Client();
 		$client->setUri($urlparams['token_url']);
 		$client->setParameterPost($authparams);
 		$response = $client->request('POST');
@@ -59,7 +57,7 @@ class Consumer {
 
 	public static function getData($url, $accesstoken, $redirects = true)
 	{
-		$client = new \Zend_Http_Client();
+		$client = new Zend_Http_Client();
 		$client->setUri($url);
 		$client->setParameterGet('access_token',$accesstoken);
 		if($redirects) {
