@@ -36,7 +36,8 @@ class Facebook implements \Zend_Auth_Adapter_Interface
 
     public static function getAuthorizationUrl()
     {
-        $options = Registry::get('config');
+        $config = Registry::get('config');
+        $options = is_object($config) ? $config->toArray() : $config;
         return Consumer::getAuthorizationUrl($options['facebook']);
     }
 
@@ -59,7 +60,9 @@ class Facebook implements \Zend_Auth_Adapter_Interface
 
     protected function _setOptions($options = null)
     {
-        $options = Registry::get('config');
+        
+      $config = Registry::get('config');
+      $options = is_object($config) ? $config->toArray() : $config;
         $this->_options = $options['facebook'];
     }
 }
