@@ -15,7 +15,7 @@ class Twitter
 	}
 
 	public function getStatus() {
-	    $endpoint = 'http://api.twitter.com/1/statuses/user_timeline.json';
+	    $endpoint = 'http://api.twitter.com/1.1/statuses/user_timeline.json';
 		return json_decode($this->_getData('status', $endpoint));
 	}
 
@@ -25,7 +25,7 @@ class Twitter
 	}
 
 	public function getProfile() {
-	    $endpoint = 'http://api.twitter.com/1/users/show.json';
+	    $endpoint = 'http://api.twitter.com/1.1/users/show.json';
 		return (array)json_decode($this->_getData('profile', $endpoint));
 	}
 	
@@ -39,6 +39,9 @@ class Twitter
 	    if (!$this->_hasData($label)) {
     	    $client = $this->_accessToken->getHttpClient($this->_options);
     	    $client->setUri($url);
+    	    // Set the request method to GET
+    	    // Thanks to http://thebestsolution.org/zend-authentication-with-facebook-twitter-and-google/#comment-43496
+    	    $client->setMethod(\Zend_Http_Client::GET);
     	    $client->setParameterGet('user_id', $this->_accessToken->user_id);
     	    $this->_setData($label, $client->request()->getBody());
 	    }
