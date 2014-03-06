@@ -15,7 +15,7 @@ class Twitter
 	}
 
 	public function getStatus() {
-	    $endpoint = 'http://api.twitter.com/1.1/statuses/user_timeline.json';
+	    $endpoint = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
 		return json_decode($this->_getData('status', $endpoint));
 	}
 
@@ -25,7 +25,7 @@ class Twitter
 	}
 
 	public function getProfile() {
-	    $endpoint = 'http://api.twitter.com/1.1/users/show.json';
+	    $endpoint = 'https://api.twitter.com/1.1/users/show.json';
 		return (array)json_decode($this->_getData('profile', $endpoint));
 	}
 	
