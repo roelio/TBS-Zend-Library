@@ -47,7 +47,8 @@ class Consumer {
 		$client->setUri($urlparams['token_url']);
 		$client->setParameterPost($authparams);
 		$response = $client->request('POST');
-		if($response->getHeader("Content-type") == "application/json") {
+		list($contentType, $_) = explode(';', $response->getHeader("Content-type"), 2);
+		if(trim($contentType) == "application/json") {
 			return (array)json_decode($response->getBody());
 		}
 		else {
